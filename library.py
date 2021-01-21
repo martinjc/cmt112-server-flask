@@ -12,4 +12,7 @@ def hello_world():
 
 
 import routes.authors
+import routes.users
+import routes.books
+import routes.loans
 

@@ -16,6 +16,12 @@ class Loan(db.Model):
     book = db.Column("book_id", db.Integer, db.ForeignKey("book.id"))
     user = db.Column("user_id", db.Integer, db.ForeignKey("user.id"))
 
+    def to_json(self):
+        return {
+            "book": self.book.id,
+            "user": self.user.id,
+            "due_date": self.due_date,
+        }
 
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -30,6 +30,11 @@ def get_user_loans(user_id):
 def get_or_make_loan(user_id, book_id):
     user = User.query.get_or_404(user_id)
     book = Book.query.get_or_404(book_id)
+    loan = Loan(user=user, book=book, due_date=request.form["dueDate"])
+    db.session.add(loan)
+    db.session.commit()
+    ret = loan.to_json()
+    return jsonify(ret)
 
 
 @app.route("/users", methods=["POST"])

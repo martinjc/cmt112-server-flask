@@ -18,10 +18,12 @@ class Loan(db.Model):
 
     def to_json(self):
         return {
-            "book": self.book.id,
-            "user": self.user.id,
+            "book": self.book,
+            "user": self.user,
             "due_date": self.due_date,
+            "id": self.id,
         }
+
 
 class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,18 +51,31 @@ class Book(db.Model):
     title = db.Column(db.String())
     isbn = db.Column(db.String())
 
+    def to_json(self, entities=False):
+        if not entities:
+            return {"title": self.title, "isbn": self.isbn, "id": self.id}
+        else:
+            return {
+                "id": self.id,
+                "title": self.title,
+                "isbn": self.isbn,
+                "authors": [a.name for a in self.authors],
+            }
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
     barcode = db.Column(db.String())
     membertype = db.Column(db.String())
-    # loans = db.relationship(
-    #     "Book",
-    #     secondary="loan",
-    #     lazy="subquery",
-    #     backref=db.backref("user", uselist=False, lazy=True),
-    # )
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "barcode": self.barcode,
+            "memberType": self.membertype,
+        }
 
 
 if __name__ == "__main__":

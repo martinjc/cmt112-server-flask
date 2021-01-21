@@ -54,3 +54,14 @@ def add_author_to_book(book_id):
     ret = book.to_json(entities=True)
     return jsonify(ret)
 
+
+@app.route("/books/<book_id>/authors/<author_id>", methods=["POST"])
+def add_author_to_book_by_id(book_id):
+    book = Book.query.get_or_404(book_id)
+    author = Author.query.get_or_404(author_id)
+    book.authors.append(author)
+    db.session.add(author)
+    db.session.add(book)
+    db.session.commit()
+    ret = book.to_json(entities=True)
+    return jsonify(ret)

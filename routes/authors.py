@@ -45,10 +45,10 @@ def get_author(author_id):
 def add_book_to_author(author_id):
     author = Author.query.get_or_404(author_id)
     book = Book.query.filter_by(
-        title=request.json["title"], isbn=request.json["isbn"]
+        title=request.json["bookTitle"], isbn=request.json["bookISBN"]
     ).first()
     if book is None:
-        book = Book(title=request.json["title"], isbn=request.json["isbn"])
+        book = Book(title=request.json["bookTitle"], isbn=request.json["bookISBN"])
         author.books.append(book)
         db.session.add(book)
         db.session.add(author)
@@ -56,3 +56,13 @@ def add_book_to_author(author_id):
     ret = author.to_json(entities=True)
     return jsonify(ret)
 
+
+@app.route("/authors/<author_id>/books/<book_id>", methods=["POST"])
+def add_book_to_author_by_id(author_id):
+    author = Author.query.get_or_404(author_id)
+    book = Book.query.get_or_404(book_id)
+    author.books.append(book)
+    db.session.add(author)
+    db.session.commit()
+    ret = author.to_json(entities=True)
+    return jsonify(ret)
